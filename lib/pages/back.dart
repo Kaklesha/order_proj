@@ -57,6 +57,29 @@ class BackEnd {
     }
   }
 
+  Future<void> post(Order order) async {
+    try {
+      var request = await client.post(
+        Uri.parse("$baseUrl/orders"),
+        body: json.encode({
+          "customer_id": order.CustomerID,
+          "line_items": [
+            {
+              "item_id": order.LineItems[0].ItemID,
+              "quantity": order.LineItems[0].ItemID,
+              "price": order.LineItems[0].ItemID,
+            }
+          ]
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+    } catch (e) {
+      print("Error $e");
+    }
+  }
+
   void close() {
     client.close();
   }

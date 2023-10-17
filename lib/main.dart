@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_proj/pages/back.dart';
+import 'package:order_proj/pages/insert.dart';
 
 void main() {
   runApp(const MyApp());
@@ -98,9 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-
-          });
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const InsertPage(),)
+          );
         },
         tooltip: 'Refresh',
         child: const Icon(Icons.refresh),

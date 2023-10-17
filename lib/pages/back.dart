@@ -80,6 +80,22 @@ class BackEnd {
     }
   }
 
+
+  Future<void> deleteByID(int id) async {
+    try {
+       await client.delete(
+        Uri.parse("$baseUrl/orders/$id"),
+        // body: json.encode(id),
+        // headers: {
+        //   "Content-Type": "application/json",
+        // },
+      );
+    } catch (e) {
+      print("Error $e");
+    }
+  }
+
+
   void close() {
     client.close();
   }

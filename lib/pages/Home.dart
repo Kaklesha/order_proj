@@ -43,9 +43,25 @@ class _MyHomePageState extends State<MyHomePage> {
               return ListView.builder(itemCount:items.length, itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(items[index].OrderID.toString()),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(items[index].Image),
+                  leading:
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(items[index].Image),
+                      ),
+                  trailing:
+                  SizedBox(
+                    height: 30,
+                    width: 40,
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        be.deleteByID(items[index].OrderID);
+                        setHome();
+                      },
+                      tooltip: 'Refresh',
+                      child: const Icon(Icons.delete, size: 16,),
+                    ),
                   ),
+
+
                 );
               });
             } else {

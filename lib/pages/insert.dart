@@ -3,7 +3,8 @@ import 'package:order_proj/pages/back.dart';
 
 
 class InsertPage extends StatefulWidget {
-  const InsertPage({Key? key}) : super(key: key);
+  VoidCallback setHome;
+  InsertPage({Key? key, required this.setHome}) : super(key: key);
 
   @override
   State<InsertPage> createState() => _InsertPageState();
@@ -12,6 +13,22 @@ class InsertPage extends StatefulWidget {
 class _InsertPageState extends State<InsertPage> {
 
 BackEnd be = BackEnd(baseUrl: "http://localhost:3000");
+
+void insert() async {
+
+    Order o = Order(OrderID: 0,
+        CustomerID: c_id,
+        LineItems:
+        [LineItem(ItemID: i_id,
+            Quantity: quant, Price: price)],
+        Image: '', CreatedAt: null,
+        ShippedAt: null, CompletedAt: null);
+
+    // Order o= Order(OrderID: OrderID, CustomerID: CustomerID, LineItems: LineItems, Image: Image, CreatedAt: CreatedAt, ShippedAt: ShippedAt, CompletedAt: CompletedAt)
+    await be.post(o);
+    widget.setHome();
+    Navigator.of(context).pop();
+}
 
   int c_id = 0;
   int i_id = 0;
@@ -65,10 +82,7 @@ BackEnd be = BackEnd(baseUrl: "http://localhost:3000");
                 ),),
               ElevatedButton(
                   onPressed: (){
-                 Order o = Order(OrderID: 0, CustomerID: c_id, LineItems: [LineItem(ItemID: i_id, Quantity: quant, Price: price)], Image: '', CreatedAt: null, ShippedAt: null, CompletedAt: null);
-
-                   // Order o= Order(OrderID: OrderID, CustomerID: CustomerID, LineItems: LineItems, Image: Image, CreatedAt: CreatedAt, ShippedAt: ShippedAt, CompletedAt: CompletedAt)
-                  be.post(o);
+                    insert();
                   },
                   child: Text("butt") )
             ],

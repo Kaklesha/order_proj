@@ -2,26 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 
-class BackEnd {
-  late String baseUrl;
-  var client = http.Client();
-
-  BackEnd({required this.baseUrl});
-
-  void get() async {
-    try {
-      var response = await client.get(Uri.parse("$baseUrl/orders"));
-      var userMap = jsonDecode(response.body);
-      print(userMap);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void close() {
-    client.close();
-  }
-}
 class LineItem {
   final int ItemID;
   final int Quantity;
@@ -40,3 +20,51 @@ class Order {
   Order({required this.OrderID, required this.CustomerID, required this.LineItems, required this.Image, required this.CreatedAt, required this.ShippedAt, required this.CompletedAt});
 }
 
+
+class BackEnd {
+  late String baseUrl;
+  var client = http.Client();
+
+  BackEnd({required this.baseUrl});
+
+  Future<List<Order>> get() async {
+    List<Order> orders = [];
+    try {
+      var response = await client.get(Uri.parse("$baseUrl/orders"));
+     // print(response.body);
+      var userMap = jsonDecode(response.body);
+
+      for (var o in userMap["items"]) {
+
+        List<LineItem> items = [];
+        for (var i in o["line_items"]) {
+          LineItem ln = LineItem(ItemID: i["item_id"], Quantity: i["quantity"], Price: i["price"]);
+          items.add(ln);
+
+        }
+        Order order = Order(OrderID: o["order_id"],
+            CustomerID: o["customer_id"],
+            LineItems: items, Image: o["image"],
+            CreatedAt: o["created_at"] ==  null ? null : DateTime.tryParse(o["created_at"]),
+            ShippedAt: o["shipped_at"] ==  null ? null : DateTime.tryParse(o["shipped_at"]),
+            CompletedAt: o["completed_at"] ==  null ? null : DateTime.tryParse(o["completed_at"]));
+        orders.add(order);
+      }
+    } catch (e) {
+      print("Error $e");
+    } finally {
+      return orders;
+    }
+  }
+
+  void close() {
+    client.close();
+  }
+}
+
+
+// {order_id: 1, customer_id: 1, line_items:
+// [{item_id: 1, quantity: 5, price: 1999}],
+// created_at: 2023-10-15T11:12:42.2880429Z,
+// shipped_at: null, completed_at: null,
+// image: http://10.0.2.2:3000/assets/images/4.png}

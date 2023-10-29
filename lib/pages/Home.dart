@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_proj/pages/TaskProfile.dart';
 import 'package:order_proj/pages/back.dart';
 import 'package:order_proj/pages/insert.dart';
 
@@ -41,27 +42,38 @@ class _MyHomePageState extends State<MyHomePage> {
             List<Order>? items = snapshot.data;
             if (items != null) {
               return ListView.builder(itemCount:items.length, itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(items[index].OrderID.toString()),
-                  leading:
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(items[index].Image),
+                return  ElevatedButton(
+
+                  onPressed: () {
+                    //be.deleteByID(items[index].OrderID);
+                   // setHome();
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => TaskProfile(item: items[index], setHome: setHome))
+                    );
+                    print(items[index].OrderID);
+                  },
+                  child: ListTile(
+                    title: Text(items[index].OrderID.toString()),
+                    leading:
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(items[index].Image),
+                        ),
+                    trailing:
+                    SizedBox(
+                      height: 30,
+                      width: 40,
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          be.deleteByID(items[index].OrderID);
+                          setHome();
+                        },
+                        tooltip: 'Refresh',
+                        child: const Icon(Icons.delete, size: 16,),
                       ),
-                  trailing:
-                  SizedBox(
-                    height: 30,
-                    width: 40,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        be.deleteByID(items[index].OrderID);
-                        setHome();
-                      },
-                      tooltip: 'Refresh',
-                      child: const Icon(Icons.delete, size: 16,),
                     ),
+
+
                   ),
-
-
                 );
               });
             } else {
